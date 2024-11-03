@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>baitap</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <style>
+        .mauDo {
+            font-size: 100%;
+            color: red;
+        }
+
+        [class*='col-'] {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        li {
+            width: 150px;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            var i = 2;
+            $('#myDK').click(function() {
+                $("#myModal").modal("show");
+            });
+            function KtMa() {
+                var mauKT = /^[0-9]{9}$/;
+                var maSo = $('#txtMa').val();
+
+                if (maSo === "") {
+                    $('#tbMa').html("Bắt buộc nhập").addClass('mauDo');
+                } else if (!mauKT.test(maSo)) {
+                    $('#tbMa').html("Mã số phải có 9 chữ số").addClass('mauDo');
+                } else {
+                    $('#tbMa').html('*').removeClass('mauDo');
+                }
+            }$('#txtMa').blur(KtMa);
+
+            function KtHT() {
+                var kt = /(^[A-Z]{1}[a-z]+)((\s[A-Z]{1}[a-z]*)+)$/;
+                if ($('#txtHT').val() =="") {
+                    $('#tbHT').html("nhập sai");
+                    $('#tbHT').addClass('mauDo');
+                    return false;
+                }
+                if (!kt.test($('#txtHT').val())) {
+                    $('#tbHT').html("chữ cái đầu mỗi từ phải viết in hoa");
+                    $('#tbHT').addClass('mauDo');
+                    return false;
+                }
+                $('#tbHT').html('*');
+                return true;
+            }
+            $('#txtHT').blur(KtHT);
+
+            function KtDC() {
+                var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                var email = $('#txtDC').val();
+
+                if (email === "") {
+                    $('#tbEmail').html("Bắt buộc nhập").addClass('mauDo');
+                    return false;
+                } else if (!emailPattern.test(email)) {
+                    $('#tbEmail').html("Email không hợp lệ").addClass('mauDo');
+                    return false;
+                } else {
+                    $('#tbEmail').html('*').removeClass('mauDo');
+                    return true;
+                }
+            }$('#txtDC').blur(KtDC);
+
+            $('#slgia').change(function() {
+                $("#slgia option:selected").each(function() {
+                    $('#txtDV').val($(this).val());
+                });
+            });
+            $('.chkDoDung').click(function() {
+                var tienDD = 0;
+                $('.chkDoDung:checked').each(function() {
+                    tienDD += parseInt($(this).val());
+                });
+                $('#txtDD').val(tienDD);
+                updateTotal();
+            });
+            
+            function updateTotal() {
+                var serviceCost = parseFloat($('#txtDV').val()) || 0;
+                var itemCost = parseFloat($('#txtDD').val()) || 0;
+                var totalCost = serviceCost + itemCost;
+                $('#txtTT').val(totalCost);
+            }
+            
+            $('#btnSave').click(function() {
+                var ma = $('#txtMa').val();
+                var ht = $('#txtHT').val();
+                var dc = $('#txtDC').val();
+                var tdv = $('#txtDV').val();
+                var tdd = $('#txtDD').val();
+                if (ma === "" || ht === "" || dc === "" || tdv === "" || tdd === "") {
+                    alert("Yêu cầu nhập đủ thông tin vào các trường!");
+                    return false; 
+                }
+                var tong = parseFloat(tdv) + parseFloat(tdd);
+                var them = "<tr><td>" + (i++) + "</td><td>" + ma + "</td><td>" + ht + "</td><td>" + dc + "</td><td>" + tdv + "</td><td>" + tdd + "</td><td>" + tong + "</td></tr>";
+                $('#tbDanhSach').append(them);
+                $('#myModal').modal('hide');
+                return true;
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <img src="../images/anh.png" alt="anh nen" srcset="" width="100%">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="navbar">
+                <ul class="nav nav-bar navbar-expand-md">
+                    <li class="nav-item"><a href="#" class="nav-link">Trang chủ</a></li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="myDK">Đăng ký</a>
+                    </li>
+                    <li class="nav-item"><a href="#" class="nav-link">Trợ giúp</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <table class="table table-borderless table-light table-primary table-hover table-striped" id="tbDanhSach">
+                <tr>
+                    <th>STT</th>
+                    <th>Mã học viên</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Tiền dịch vụ</th>
+                    <th>Tiền đồ dùng</th>
+                    <th>Tổng tiền</th>
+                </tr>
+                <tr>
+                    <th>1</th>
+                    <th>22689261</th>
+                    <th>Lê Quốc Khánh</th>
+                    <th>khanhiuh@gmail.com</th>
+                    <th>2000</th>
+                    <th>3000</th>
+                    <th>5000</th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4>Thông tin thanh toán</h4>
+                        <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <form action="" class="form-control">
+                            <div class="row form-group p-1">
+                                <div class="col-3 col-sm-3">
+                                    <label>Mã học viên</label>
+                                </div>
+                                <div class="col-3 col-sm-6">
+                                    <input type="text" class="form-control" id="txtMa" placeholder="123456789">
+                                </div>
+                                <div class="col-3 col-sm-3 p-2">
+                                    <span id="tbMa">*</span>
+                                </div>
+                            </div>
+
+                            <div class="row form-group p-1">
+                                <div class="col-3 col-sm-3">
+                                    <label for="">Họ tên</label>
+                                </div>
+                                <div class="col-6 col-sm-6">
+                                    <input type="text" class="form-control" id="txtHT" placeholder="Le Quoc Khanh">
+                                </div>
+                                <div class="col-3 col-sm-3 p-2">
+                                    <span id="tbHT">*</span>
+                                </div>
+                            </div>
+
+                            <div class="row form-group p-1">
+                                <div class="col-6 col-sm-3">
+                                    <label for="">Email</label>
+                                </div>
+                                <div class="col-6 col-sm-6 ">
+                                    <input type="text" class="form-control" id="txtDC" placeholder="khanhiuh@gmail.com">
+                                </div>
+                                <div class="col-3 col-sm-3 p-2">
+                                    <span id="tbEmail">*</span>
+                                </div>
+                            </div>
+
+                            <div class="row form-group p-1">
+                                <div class="col-4 col-sm-3">
+                                    <label for="">Dịch vụ</label>
+                                </div>
+                                <div class="col-6 col-sm-6">
+                                    <select id="slgia" class="form-control">
+                                        <option value="2000">Bơi</option>
+                                        <option value="3000">Trượt ván</option>
+                                        <option value="5000">Moto nước</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row form-group p-1">
+                                <div class="col-4 col-sm-3">
+                                    <label for="">Giá tiền</label>
+                                </div>
+                                <div class="col-8 col-sm-6">
+                                    <input type="text" class="form-control" id="txtDV">
+                                </div>
+                            </div>
+
+                            <div class="row p-1">
+                                <div class="col-4 col-sm-3">
+                                    <label for="">Đồ dùng</label>
+                                </div>
+                                <div class="col-8 col-sm-9">
+                                    <label class="form-check-inline">
+                                        <input type="checkbox" class="chkDoDung" value="1000"> Nón
+                                    </label>
+                                    <label class="form-check-inline">
+                                        <input type="checkbox" class="chkDoDung" value="2000"> Kính
+                                    </label>
+                                    <label class="form-check-inline">
+                                        <input type="checkbox" class="chkDoDung" value="5000"> Phao
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="row p-1">
+                                <div class="col-4 col-sm-3">
+                                    <label for="">Giá tiền</label>
+                                </div>
+                                <div class="col-8 col-sm-6">
+                                    <input type="text" class="form-control" id="txtDD">
+                                </div>
+
+                            </div>
+                            <div class="row p-1">
+                                <div class="col-4 col-sm-3">
+                                    <label for="">Tổng tiền</label>
+                                </div>
+                                <div class="col-8 col-sm-6">
+                                    <input type="text" class="form-control" id="txtTT">
+                                </div>
+
+                            </div>
+                            <div class="row p-1">
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-success" id="btnSave" style="width: 100%;">Thanh toán</button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal" style="width: 100%;">Huỷ</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <h4>Trang thanh toán</h4> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-md-4">
+                <h6>Mã sinh viên:______________</h6>
+            </div>
+            <div class="col-4 col-md-4">
+                <h6>Họ tên:______________</h6>
+            </div>
+            <div class="col-4 col-md-4">
+                <h6>Phòng thi:______________</h6>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+
